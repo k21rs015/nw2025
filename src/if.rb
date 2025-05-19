@@ -19,7 +19,6 @@ print "name?"
 name = gets.chomp
 if name == "KSU"
   puts "Hello"
-end
 
 q=3
 if q==3
@@ -29,3 +28,8 @@ end
 puts "Three" if q==3
 
 puts "Not Three" if q!=3
+
+puts "Three" if q==3
+
+puts "Not Three" if q!=3
+puts"Not Three" unless q==3
