@@ -1,4 +1,4 @@
-#!/user/bin/enc ruby
+#!/usr/bin/env ruby
 #
 #コマンドラインで指定したすべてのファイルの各行を1行づつ
 #ruby rcat.rb a.txt b.txt c.rb
