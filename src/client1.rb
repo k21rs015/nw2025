@@ -5,7 +5,17 @@
 
 require "socket"
 
-host, path = ARGV
+#host, path = ARGV
+url=ARGV[0]
+url=url[7..]
+index = url.index("/")
+host = url[0,index]
+path = url[index...]
+
+puts "host:#{host}"
+puts "path:#{path}"
+
+puts url
 
 s = TCPSocket.open(host, "http")
 s.print("GET #{path} HTTP/1.1\r\n")
