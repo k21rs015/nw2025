@@ -6,6 +6,7 @@ def server sock
     end
     sock.close 
 end
+
 #ポート番号80番でopen
 s0=TCPServer.open(80)
 sock=s0.accept
