@@ -28,12 +28,22 @@ loop do
       username = parts[1]
 
       case command
+       #ログイン
       when "LOGIN"
         puts "#{username} がログインしました。"
         conn.puts "WELCOME|#{username}"
-      when "MSG"
-        text = parts[2]
-        puts "#{username} says: #{text}"
+      #給料計算
+      when "WORK"
+        hours = parts[2].to_f
+        cups_sold = parts[3].to_i
+
+        wage = (hours * HOURLY_WAGE).to_i
+        commision = commisiion(cups_sold)
+        total_pay  = wage + commision
+
+        puts "#{username}：#{hours}時間、#{cups_sold}杯 → 基本給#{wage}円＋歩合#{commission}円＝#{total_pay}円"
+        conn.puts "PAY|#{username}|#{total_pay}"
+      #ログアウト
       when "LOGOUT"
         puts "#{username} がログアウトしました。"
         conn.puts "GOODBYE|#{username}"
