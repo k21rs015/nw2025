@@ -1,8 +1,22 @@
 #!/usr/bin/ruby
 require 'socket'
 
+HOURLY_WAGE = 1000 #時給
+
 server = TCPServer.open(2000)
 puts "サーバー起動中..."
+
+#歩合を計算する関数
+def commisiion(cups_sold)
+  case cups_sold
+  when 0..40
+    0
+  when 41..100
+    (cups_sold -40) * 40
+  else
+    (60 * 40) + (cups_sold) * 70
+  end
+end
 
 loop do
   client = server.accept
