@@ -1,33 +1,18 @@
 #! /usr/local/bin/ruby
 
-require "socket"
+require 'socket'
 
-#host, path = ARGV
-url=ARGV[0]
-url=url[7..]
-index = url.index("/")
-host = url[0,index]
-path = url[index...]
+socket = TCPSocket.open('localhost', 2000)
+socket.puts "LOGIN|iwamoto"
 
-puts "host:#{host}"
-puts "path:#{path}"
+while line = socket.gets
+  puts "サーバーから: #{line}"
+  break if line.start_with?("GOODBYE")
 
-puts url
-
-s = TCPSocket.open(host, "http")
-s.print("GET #{path} HTTP/1.1\r\n")
-s.print("Host: #{host}\r\n")
-s.print("Connection: close\r\n")
-s.print("\r\n")
-
-while line=s.gets
-  break if line == "\r\n"
+  # 適当にメッセージを送ってみる
+  socket.puts "MSG|iwamoto|こんにちは！"
+  sleep 1
+  socket.puts "LOGOUT|iwamoto"
 end
 
-#while line=s.gets&.chomp
-# break if line.wmpty?
-#end
-
-while line=s.gets&.chomp
-  puts line
-end
+socket.close
