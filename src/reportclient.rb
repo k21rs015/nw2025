@@ -1,22 +1,35 @@
-require 'socket'
+require "socket"
 
-socket = TCPSocket.open('localhost', 2000)
-username = "iwamoto"
+puts "バイト給与計算クライアント"
+print "ユーザー名を入力してください："
+name = gets.chomp
 
-# ログイン
-socket.puts "LOGIN|#{username}"
-puts socket.gets  # WELCOME
+loop do
+  print "\n勤務時間（分）を入力してください（終了は q）："
+  input = gets.chomp
+  break if input.downcase == "q"
+  minutes = input.to_i
 
-# 労働時間と販売杯数を送信
-worked_hours = 2.5     # 2時間30分
-cups_sold = 75         # 75杯販売
-socket.puts "WORK|#{username}|#{worked_hours}|#{cups_sold}"
+  print "販売杯数を入力してください："
+  cups = gets.chomp.to_i
 
-# サーバーからの給料情報受け取り
-puts socket.gets  # PAY|iwamoto|合計金額
+  # サーバーへ接続してまとめて送信
+  socket = TCPSocket.open("localhost", 20000)
+  socket.puts "REPORT|#{name}|#{minutes}|#{cups}"
 
-# ログアウト
-socket.puts "LOGOUT|#{username}"
-puts socket.gets
+  # 結果を受信
+  response = socket.gets.chomp
+  if response =~ /^PAY\|(.+?)\|(\d+)$/
+    puts "\n--- 結果 ---"
+    puts "ユーザー: #{$1}"
+    puts "勤務時間: #{minutes} 分"
+    puts "販売杯数: #{cups} 杯"
+    puts "給与: #{$2} 円"
+  else
+    puts "エラー: サーバーから不正な応答を受信しました。"
+  end
 
-socket.close
+  # 切断
+  socket.puts "GOODBYE|#{name}"
+  socket.close
+end
